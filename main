@@ -1,0 +1,32 @@
+import discord, random, os
+from discord.ext import commands
+
+intents = discord.Intents.default()
+intents.message_content = True
+
+bot = commands.Bot(command_prefix='$', intents=intents)
+
+@bot.event
+async def on_ready():
+    print(f'We have logged in as {bot.user}')
+
+@bot.command()
+async def mem(ctx):
+    rarity = random.randint(1, 1000)
+    if rarity >= 1 and rarity <= 500:
+        random_image = random.choice(os.listdir('images/common'))
+        random_image = f'images/common/{random_image}'
+    elif rarity >= 501 and rarity <= 850:
+        random_image = random.choice(os.listdir('images/rare'))
+        random_image = f'images/rare/{random_image}'
+    elif rarity >= 851 and rarity <= 998:
+        random_image = random.choice(os.listdir('images/epic'))
+        random_image = f'images/epic/{random_image}'
+    elif rarity >= 999 and rarity <= 1000:
+        random_image = random.choice(os.listdir('images/legendary'))
+        random_image = f'images/legendary/{random_image}'
+    with open(random_image, 'rb') as image:
+        picture = discord.File(image)
+    await ctx.send(file = picture)
+
+bot.run('Token')
